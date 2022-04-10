@@ -24,6 +24,7 @@ class ScrollingActivity : AppCompatActivity() {
         binding.fab.setOnClickListener { view ->
             openAccessibility(view)
         }
+        binding.content.btnSw.text = if (DingDongService.en) "关闭功能" else "开启功能"
     }
 
     fun openAccessibility(view: View?) {
@@ -36,5 +37,10 @@ class ScrollingActivity : AppCompatActivity() {
                     .setAction("Action", null).show()
             }
         }
+    }
+
+    fun openStateSwitch(view: View) {
+        DingDongService.en = DingDongService.en.not()
+        binding.content.btnSw.text = if (DingDongService.en) "关闭功能" else "开启功能"
     }
 }

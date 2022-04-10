@@ -12,12 +12,14 @@ class DingDongService : AccessibilityService() {
     var currentClassName: String = ""
     var chooseTimeSuccess: Boolean = false
     var enableJumpCart: Boolean = true
-    var checkNotificationCount: Int = 0;
+    var checkNotificationCount: Int = 0
+
 
     override fun onAccessibilityEvent(event: AccessibilityEvent?) {
         Log.d(TAG, "event: $event")
         event?.let {
             handleClassName(event)
+            if (!en) return
             when (currentClassName) {
                 CART_ACTIVITY -> {
                     pay(event)
@@ -36,6 +38,9 @@ class DingDongService : AccessibilityService() {
                 }
                 RETURN_CART_DIALOG -> {
                     clickReturnCartBtn(event)
+                }
+                VN1 -> {
+                    clickRetryLoadBtn(event)
                 }
                 else -> {
                     clickDialog(event)
@@ -56,6 +61,15 @@ class DingDongService : AccessibilityService() {
         }
     }
 
+    private fun clickRetryLoadBtn(event: AccessibilityEvent) {
+        var nodes = event.source?.findAccessibilityNodeInfosByText("重新加载")
+        nodes?.forEach { node ->
+            node.performAction(AccessibilityNodeInfo.ACTION_CLICK)
+            Log.d(TAG, "clickDialog confirm")
+            return@forEach
+        }
+    }
+
     private fun clickReturnCartBtn(event: AccessibilityEvent) {
         var nodes = event.source?.findAccessibilityNodeInfosByText("返回购物车")
         nodes?.forEach { node ->
@@ -67,7 +81,7 @@ class DingDongService : AccessibilityService() {
 
     private fun checkNotification(event: AccessibilityEvent) {
         if (event.eventType == AccessibilityEvent.TYPE_NOTIFICATION_STATE_CHANGED) {
-            if (checkNotificationCount ++ > 1) {
+            if (checkNotificationCount++ > 1) {
                 Log.d(TAG, "checkNotificationCount: $checkNotificationCount, return")
                 performGlobalAction(GLOBAL_ACTION_BACK)
             }
@@ -125,6 +139,9 @@ class DingDongService : AccessibilityService() {
         if (nodes == null) {
             nodes = event.source?.findAccessibilityNodeInfosByText("修改送达时间")
         }
+        if (nodes == null) {
+            nodes = event.source?.findAccessibilityNodeInfosByText("重新加载")
+        }
         nodes?.forEach { node ->
             node.performAction(AccessibilityNodeInfo.ACTION_CLICK)
             Log.d(TAG, "clickDialog confirm")
@@ -144,5 +161,7 @@ class DingDongService : AccessibilityService() {
         const val RETURN_CART_DIALOG = "by"
         const val XN1 = "xn1"
         const val CHOOSE_DELIVERY_TIME_V2 = "iy"
+        const val VN1 = "vn1"
+        var en = true
     }
 }

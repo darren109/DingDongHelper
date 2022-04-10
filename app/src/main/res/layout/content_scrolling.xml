@@ -21,12 +21,13 @@
             android:autoLink="web"/>
 
         <Button
+            android:id="@+id/btn_sw"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="开启插件"
+            android:text="关闭功能"
             android:textSize="18dp"
             android:layout_gravity="center_horizontal"
-            android:onClick="openAccessibility"
+            android:onClick="openStateSwitch"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintRight_toRightOf="parent"
